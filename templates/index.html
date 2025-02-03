@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Assistant</title>
+</head>
+<body>
+    <h1>Chat Assistant</h1>
+    <form id="queryForm">
+        <label for="queryType">Query Type:</label>
+        <select id="queryType">
+            <option value="employees_by_department">Show Employees by Department</option>
+            <option value="department_manager">Get Department Manager</option>
+            <option value="employees_hired_after">List Employees Hired After Date</option>
+            <option value="total_salary_expense">Get Total Salary Expense</option>
+        </select>
+        <br>
+        <label for="department">Department:</label>
+        <input type="text" id="department" name="department">
+        <br>
+        <label for="date">Date (YYYY-MM-DD):</label>
+        <input type="text" id="date" name="date">
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+    <h2>Response:</h2>
+    <pre id="response"></pre>
+
+    <script>
+        document.getElementById('queryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const queryType = document.getElementById('queryType').value;
+            const department = document.getElementById('department').value;
+            const date = document.getElementById('date').value;
+
+            const response = await fetch('/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: queryType, parameters: { department, date } })
+            });
+
+            const data = await response.json();
+            document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+        });
+    </script>
+</body>
+</html>
